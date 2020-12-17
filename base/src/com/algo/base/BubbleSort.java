@@ -3,71 +3,40 @@ package com.algo.base;
 import java.util.Arrays;
 
 /**
- * 选择排序
- * 有N个数值，每遍历一次
- * 从N个数值里面选出最小的一位，放在第i位
+ * 冒泡排序
  * 过程：
- * arr[0～N-1]范围上，找到最小值所在的位置，然后把最小值交换到0位置。
- * arr[1～N-1]范围上，找到最小值所在的位置，然后把最小值交换到1位置。
- * arr[2～N-1]范围上，找到最小值所在的位置，然后把最小值交换到2位置。
+ * 在arr[0～N-1]范围上：
+ * arr[0]和arr[1]，谁大谁来到1位置；arr[1]和arr[2]，谁大谁来到2位置…arr[N-2]和arr[N-1]，谁大谁来到N-1位置
+ * <p>
+ * 在arr[0～N-2]范围上，重复上面的过程，但最后一步是arr[N-3]和arr[N-2]，谁大谁来到N-2位置
+ * 在arr[0～N-3]范围上，重复上面的过程，但最后一步是arr[N-4]和arr[N-3]，谁大谁来到N-3位置
  * …
- * arr[N-1～N-1]范围上，找到最小值位置，然后把最小值交换到N-1位置。
- *
+ * 最后在arr[0～1]范围上，重复上面的过程，但最后一步是arr[0]和arr[1]，谁大谁来到1位置
+ * <p>
+ * <p>
  * 估算：
- * 很明显，如果arr长度为N，每一步常数操作的数量，如等差数列一般
+ * 很明显，如果arr长度为N，每一步常数操作的数量，依然如等差数列一般
  * 所以，总的常数操作数量 = a*(N^2) + b*N + c (a、b、c都是常数)
- *
- * 所以选择排序的时间复杂度为O(N^2)。
+ * <p>
+ * 所以冒泡排序的时间复杂度为O(N^2)。
  */
-public class SelectSort {
+public class BubbleSort {
 
-
-    public static void selectionSort(int[] arr) {
+    public static void bubbleSort(int[] arr) {
         if (arr == null || arr.length < 2) {
             return;
         }
-        for (int i = 0; i < arr.length - 1; i++) {
-            int minIndex = i;
-            for (int j = i + 1; j < arr.length; j++) { // i ~ N-1 上找最小值的下标
-                minIndex = arr[j] < arr[minIndex] ? j : minIndex;
+
+        for (int i = arr.length - 1; i > 0; i--) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int tmp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tmp;
+                }
             }
-            //swap(arr, i, minIndex);
-            int tem = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = tem;
         }
     }
-
-    public static void swap(int[] arr, int i, int j) {
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
-    }
-
-
-    /*public static void selectionSort(int[] arr) {
-        if (arr == null || arr.length < 2) {
-            return;
-        }
-        // 0 ~ N-1
-        // 1~n-1
-        // 2
-        for (int i = 0; i < arr.length - 1; i++) { // i ~ N-1
-            // 最小值在哪个位置上  i～n-1
-            int minIndex = i;
-            for (int j = i + 1; j < arr.length; j++) { // i ~ N-1 上找最小值的下标
-                minIndex = arr[j] < arr[minIndex] ? j : minIndex;
-            }
-            swap(arr, i, minIndex);
-        }
-    }
-
-    public static void swap(int[] arr, int i, int j) {
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
-    }*/
-
 
     // for test
     public static void comparator(int[] arr) {
@@ -76,12 +45,8 @@ public class SelectSort {
 
     // for test
     public static int[] generateRandomArray(int maxSize, int maxValue) {
-        // Math.random()   [0,1)
-        // Math.random() * N  [0,N)
-        // (int)(Math.random() * N)  [0, N-1]
         int[] arr = new int[(int) ((maxSize + 1) * Math.random())];
         for (int i = 0; i < arr.length; i++) {
-            // [-? , +?]
             arr[i] = (int) ((maxValue + 1) * Math.random()) - (int) (maxValue * Math.random());
         }
         return arr;
@@ -138,12 +103,10 @@ public class SelectSort {
         for (int i = 0; i < testTime; i++) {
             int[] arr1 = generateRandomArray(maxSize, maxValue);
             int[] arr2 = copyArray(arr1);
-            selectionSort(arr1);
+            bubbleSort(arr1);
             comparator(arr2);
             if (!isEqual(arr1, arr2)) {
                 succeed = false;
-                printArray(arr1);
-                printArray(arr2);
                 break;
             }
         }
@@ -151,7 +114,7 @@ public class SelectSort {
 
         int[] arr = generateRandomArray(maxSize, maxValue);
         printArray(arr);
-        selectionSort(arr);
+        bubbleSort(arr);
         printArray(arr);
     }
 
