@@ -1,4 +1,4 @@
-package com.algo.base;
+package com.algo.base.class01;
 
 import java.sql.SQLOutput;
 
